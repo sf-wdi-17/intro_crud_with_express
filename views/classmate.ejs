@@ -1,0 +1,12 @@
+<!DOCTYPE HTML>
+<html>
+<body>
+  <h1>Classmate:</h1>
+  <div>
+    <%= mate.first_name %>
+  </div>
+  <form method="POST" action="/classmates/<%= id %>?_method=DELETE">
+      <button type="submit">Delete Classmate</button>
+    </form>
+</body>
+</html>
