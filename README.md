@@ -1,4 +1,4 @@
-**NOTE:** There is a completed version of the code on the `complete` branch. It can be found [HERE](https://github.com/sf-wdi-17/intro_crud_with_express/tree/complete).
+**NOTE:** There is a completed version of the code on the `complete` branch. It can be found [HERE](https://github.com/sf-wdi-17/intro_crud_with_express/tree/complete). **GO HERE FOR THE UPDATED VERSION OF THE NOTES!!!!!!!!!!**
 
 #In class assignment
 To get started Clone this repo. Then run `npm install`, and, `createdb  crud_database_development`, and `sequelize db:migrate`, and then open the repository with `subl .` then run `nodemon`.
