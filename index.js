@@ -20,8 +20,9 @@ app.get('/', function(req,res) {
 
 // Exercise 1: Add Get routes for all Classmates
 app.get('/classmates', function(req,res) {
-
-  res.render('classmates', {peers: []});
+	db.Classmate.all().then(function(mates){
+	res.render('classmates', {peers: mates});
+	})
 });
 
 // Exercise 2:
