@@ -3,8 +3,8 @@
 <body>
   <h1>Classmates edit:</h1>
   <form method="POST" action="/classmates/<%=id%>?_method=PUT">
-    <input type="text" name="first_name">
-    <input type="number" name="age">
+    <input type="text" name="first_name" value="<%= mate.first_name %>">
+    <input type="number" name="age" value="<%= mate.age %>">
     <button type="submit">Submit</button>
   </form>
 
