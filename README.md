@@ -116,28 +116,28 @@ This route will be used to display all of the classmates that are currently in o
 <html>
 <body>
   <h1>Classmates:</h1>
-  <% peers.forEach(function(mate) { %>
+  <% ejsMates.forEach(function(ejsMate) { %>
   <div>
-    <%= mate.first_name %>
+    <%= ejsMate.first_name %>
   </div>
   <% }) %>
 </body>
 </html>
 ```
 
-At the moment, the `peers` array we provide the `res.render` function is empty.
+At the moment, the `ejsMates` array we provide the `res.render` function is empty.
 
 ```js
 app.get('/classmates', function(req,res) {
-  res.render('classmates', {peers: []});
+  res.render('classmates', {ejsMates: []});
 });
 ```
 We'll want to modify this route to use the `db.Classmate.all()` method to grab all of the classmates and then pass the results on to the `res.render` method. Doing so yields the following.
 
 ```js
 app.get('/classmates', function(req,res) {
-  db.Classmate.all().then(function(mates){
-    res.render('classmates', {peers: mates});
+  db.Classmate.all().then(function(dbMates){
+    res.render('classmates', {ejsMates: dbMates});
   })
 });
 ```
@@ -193,7 +193,9 @@ app.post('/classmates', function(req,res) {
   var age = req.body.age;
 
   db.Classmate.create({first_name: name, age: age})
-              .then(function(mate) {
+              .then(function(dbMate) {
+                // We actually dont use dbMate, we could
+                // get rid of it
                 res.redirect('/classmates');
               });
 });
@@ -210,9 +212,9 @@ This route will be used to display the classmate with a given `id`. It renders t
 <body>
   <h1>Classmate:</h1>
   <div>
-    <%= mate.first_name %>
+    <%= ejsMate.first_name %>
   </div>
-  <form method="POST" action="/classmates/<%= id %>?_method=DELETE">
+  <form method="POST" action="/classmates/<%= ejsMate.id %>?_method=DELETE">
       <button type="submit">Delete Classmate</button>
     </form>
 </body>
@@ -232,8 +234,8 @@ to using `db.Classmate.find` to find the appropriate classmate, and then render 
 app.get('/classmates/:id', function(req,res) {
   var mateId = req.params.id;
   db.Classmate.find(mateId)
-              .then(function(buddy) {
-                res.render('classmate', {mate: buddy,id: mateId});
+              .then(function(dbMate) {
+                res.render('classmate', {ejsMate: dbMate});
               });
 });
 ```
@@ -249,9 +251,9 @@ This route renders the `views/edit.ejs` template. It provides a form, much like 
 <html>
 <body>
   <h1>Classmates edit:</h1>
-  <form method="POST" action="/classmates/<%=id%>?_method=PUT">
-    <input type="text" name="first_name">
-    <input type="number" name="age">
+  <form method="POST" action="/classmates/<%=ejsMate.id%>?_method=PUT">
+    <input type="text" name="first_name" value="<%=ejsMate.first_name%>">
+    <input type="number" name="age" value="<%=ejsMate.age%>">
     <button type="submit">Submit</button>
   </form>
 
@@ -270,8 +272,8 @@ we'll need something much like the `GET` route for `/classmates/:id`, where we u
 app.get('/classmates/:id/edit', function(req,res) {
   var mateId = req.params.id;
   db.Classmate.find(mateId)
-              .then(function(buddy) {
-                res.render('edit', {mate: buddy,id: mateId});
+              .then(function(dbMate) {
+                res.render('edit', {ejsMate: dbMate});
               });
 });
 ```
@@ -289,11 +291,11 @@ app.put('/classmates/:id', function(req,res) {
   var name = req.body.first_name;
   var age = req.body.age;
   db.Classmate.find(mateId)
-              .then(function(mate){
-                mate.updateAttributes({
+              .then(function(dbMate){
+                dbMate.updateAttributes({
                   first_name: name,
                   age: age})
-                .then(function(savedMate) {
+                .then(function(dbMate) {
                   res.redirect('/classmates/'+mateId);
                 });
               });
@@ -315,8 +317,8 @@ to
 app.delete('/classmates/:id', function(req,res) {
   var mateId = req.params.id;
   db.Classmate.find(mateId)
-              .then(function(mate){
-                mate.destroy()
+              .then(function(dbMate){
+                dbMate.destroy()
                 .then(function() {
                   res.redirect('/classmates');
                 });

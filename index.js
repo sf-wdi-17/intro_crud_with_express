@@ -20,8 +20,8 @@ app.get('/', function(req,res) {
 
 // Exercise 1: Add Get routes for all Classmates
 app.get('/classmates', function(req,res) {
-  db.Classmate.all().then(function(mates){
-    res.render('classmates', {peers: mates});
+  db.Classmate.all().then(function(dbMates){
+    res.render('classmates', {ejsMates: dbMates});
   })
 });
 
@@ -38,7 +38,7 @@ app.post('/classmates', function(req,res) {
   var age = req.body.age;
 
   db.Classmate.create({first_name: name, age: age})
-              .then(function(mate) {
+              .then(function(dbMate) {
                 res.redirect('/classmates');
               });
 });
@@ -49,8 +49,8 @@ app.post('/classmates', function(req,res) {
 app.get('/classmates/:id', function(req,res) {
   var mateId = req.params.id;
   db.Classmate.find(mateId)
-              .then(function(buddy) {
-                res.render('classmate', {mate: buddy,id: mateId});
+              .then(function(dbMate) {
+                res.render('classmate', {ejsMate: dbMate});
               });
 });
 
@@ -59,8 +59,8 @@ app.get('/classmates/:id', function(req,res) {
 app.get('/classmates/:id/edit', function(req,res) {
   var mateId = req.params.id;
   db.Classmate.find(mateId)
-              .then(function(buddy) {
-                res.render('edit', {mate: buddy,id: mateId});
+              .then(function(dbMate) {
+                res.render('edit', {ejsMate: dbMate});
               });
 });
 
@@ -70,8 +70,8 @@ app.put('/classmates/:id', function(req,res) {
   var name = req.body.first_name;
   var age = req.body.age;
   db.Classmate.find(mateId)
-              .then(function(mate){
-                mate.updateAttributes({
+              .then(function(dbMate){
+                dbMate.updateAttributes({
                   first_name: name,
                   age: age})
                 .then(function(savedMate) {
@@ -84,8 +84,8 @@ app.put('/classmates/:id', function(req,res) {
 app.delete('/classmates/:id', function(req,res) {
   var mateId = req.params.id;
   db.Classmate.find(mateId)
-              .then(function(mate){
-                mate.destroy()
+              .then(function(dbMate){
+                dbMate.destroy()
                 .then(function() {
                   res.redirect('/classmates');
                 });

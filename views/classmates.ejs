@@ -2,10 +2,18 @@
 <html>
 <body>
   <h1>Classmates:</h1>
-  <% peers.forEach(function(mate) { %>
+  <% ejsMates.forEach(function(mate) { %>
   <div>
     <%= mate.first_name %>
   </div>
   <% }) %>
+
+  <div>HERE IS THE OTHER WAY OF DOING IT</div>
+
+  <% for (var i =0; i < ejsMates.length; i++) {  %>
+  <div>
+    <%= ejsMates[i].first_name %>
+  </div>
+  <% } %>
 </body>
 </html>
