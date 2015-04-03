@@ -20,9 +20,9 @@ app.get('/', function(req,res) {
 
 // Exercise 1: Add Get routes for all Classmates
 app.get('/classmates', function(req,res) {
-	db.Classmate.all().then(function(mates){
-	res.render('classmates', {peers: mates});
-	})
+  db.Classmate.all().then(function(mates){
+    res.render('classmates', {peers: mates});
+  })
 });
 
 // Exercise 2:
@@ -34,34 +34,62 @@ app.get('/classmates/new', function(req,res) {
 
 // Part 2: Post route for creating a new Classmate
 app.post('/classmates', function(req,res) {
+  var name = req.body.first_name;
+  var age = req.body.age;
 
-  res.redirect('/classmates');
+  db.Classmate.create({first_name: name, age: age})
+              .then(function(mate) {
+                res.redirect('/classmates');
+              });
 });
+
 
 // Exercise 3: Add Get route for a specific Classmate
 // with an id
 app.get('/classmates/:id', function(req,res) {
-
-  res.render('classmate', {mate: {},id: req.params.id });
+  var mateId = req.params.id;
+  db.Classmate.find(mateId)
+              .then(function(buddy) {
+                res.render('classmate', {mate: buddy,id: mateId});
+              });
 });
 
 //Exercise 4:
 // Part 1: Add Get route for a editing a classmate form
 app.get('/classmates/:id/edit', function(req,res) {
-
-  res.render('edit', {id: req.params.id});
+  var mateId = req.params.id;
+  db.Classmate.find(mateId)
+              .then(function(buddy) {
+                res.render('edit', {mate: buddy,id: mateId});
+              });
 });
 
 // Part 2: Put route for updating a student
 app.put('/classmates/:id', function(req,res) {
-
-  res.redirect('/classmates');
+  var mateId = req.params.id;
+  var name = req.body.first_name;
+  var age = req.body.age;
+  db.Classmate.find(mateId)
+              .then(function(mate){
+                mate.updateAttributes({
+                  first_name: name,
+                  age: age})
+                .then(function(savedMate) {
+                  res.redirect('/classmates/'+mateId);
+                });
+              });
 });
 
 // Exercise 5: Delete
 app.delete('/classmates/:id', function(req,res) {
-
-  res.redirect('/classmates');
-})
+  var mateId = req.params.id;
+  db.Classmate.find(mateId)
+              .then(function(mate){
+                mate.destroy()
+                .then(function() {
+                  res.redirect('/classmates');
+                });
+              });
+});
 
 app.listen(3000);
